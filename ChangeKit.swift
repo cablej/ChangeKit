@@ -16,7 +16,7 @@ public class ChangeKit: NSObject {
     var clientID = ""
     var clientSecret = ""
     var scope: [String] = []
-    let redirect_uri = "http://tiphound.me/callback.php"
+    var redirect_uri = ""
     
     let baseURL = NSURL(string: "https://www.changetip.com/")
     
@@ -25,6 +25,11 @@ public class ChangeKit: NSObject {
     struct Currency {
         static let btc = "btc"
         static let usd = "usd"
+    }
+    
+    struct Me {
+        static let full = "full"
+        static let notFull = ""
     }
     
     private override init() {
@@ -56,7 +61,7 @@ public class ChangeKit: NSObject {
         }
         
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) { (response, data, error) -> Void in
-            print(error)
+            //print(error)
             guard let data = data, let dataString = String.init(data: data, encoding: NSUTF8StringEncoding), let jsonDict = self.convertStringToDictionary(dataString) else {
                 completionHandler(nil)
                 return
@@ -66,21 +71,21 @@ public class ChangeKit: NSObject {
         }
     }
     
-    func tipURL(amount: String, message: String, completionHandler: ([String:AnyObject]?) -> Void){
-        request("v2/tip-url", method: "POST", parameters: ["amount" : amount, "message": message]) { (dictionary) -> Void in
-            completionHandler(dictionary)
+    func tipURL(amount: String, message: String = "", completionHandler: ([String:AnyObject]?) -> Void){
+        request("v2/tip-url", method: "POST", parameters: ["amount" : amount, "message": message]) { (response) -> Void in
+            completionHandler(response)
         }
     }
     
-    func me(full: Bool, completionHandler: ([String:AnyObject]?) -> Void) {
-        request("v2/me", method: "GET", parameters: ["full" : String(full)]) { (dictionary) -> Void in
-            completionHandler(dictionary)
+    func me(full: String = "", completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/me", method: "GET", parameters: ["full" : full]) { (response) -> Void in
+            completionHandler(response)
         }
     }
     
-    func balance(currency: String, completionHandler: ([String:AnyObject]?) -> Void) {
-        request("v2/pocket/\(currency)/balance", method: "GET", parameters: nil) { (dictionary) -> Void in
-            completionHandler(dictionary)
+    func balance(currency: String = Currency.btc, completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/pocket/\(currency)/balance", method: "GET", parameters: nil) { (response) -> Void in
+            completionHandler(response)
         }
     }
     
