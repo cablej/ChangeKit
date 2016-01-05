@@ -4,7 +4,6 @@ A Changetip Library for iOS
 This library simplifies using the Changetip API for iOS. It's written in Swift 2.0 for iOS 8 and above.
 
 ### Installation
-Currently, this library is just some files (I'm working on converting it to a CocoaPod).
 
 1. First, install the following CocoaPods:
 
