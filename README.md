@@ -35,15 +35,41 @@ func application(application: UIApplication,
 
 This will allow the app to notify ChangeKit when a user logs in with Changetip.
 
+5. Add to your app's info.plist, replacing YOUR_APP_BUNDLE_ID with your bundle id, i.e. "com.cablej.ChangetipApp"
+
+```
+<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>YOUR_APP_BUNDLE_ID</string>
+			</array>
+		</dict>
+	</array>
+```
+
 ### Authentication
 
 Authentication is easy and straightfoward. OAuth tokens are stored in the keychain.
 
-First, initialize your client id, client secret, and scope, obtained from [Changetip's API](https://www.changetip.com/o/applications/):
+We run into one problem with the API. We want the callback url to be an x-callback-url, which will open in the app. However, Changetip's API currently does not allow this. You want your app's redirect uri to be of the form:
+
+```
+YOUR_APP_BUNDLE_ID:/oauth2Callback?
+```
+
+As a temporary workaround, we must have an intermediate server to redirect here. You can either use your own, or use the server I have graciously provided:
+
+```
+http://tiphound.me/callback.php?u=YOUR_APP_BUNDLE_ID
+```
+
+First, initialize your client id, client secret, and scope, obtained from [Changetip's API](https://www.changetip.com/o/applications/).
 
 ```
 ChangeKit.sharedInstance.clientID = "your_client_id"
 ChangeKit.sharedInstance.clientSecret = "your_client_secret"
+ChangeKit.sharedInstance.redirect_uri = "your_redirect_uri"
 ```
 
 Next, declare your Changetip scope. Note that you must also configure this on the Changetip API for your application. The full list of API scopes is available [here](https://www.changetip.com/api/auth/).
