@@ -12,12 +12,11 @@ This library simplifies using the Changetip API for iOS. It's written in Swift 2
   
 2. Add the ChangeKit folder to your project.
 
-3. Add the file "ChangeKitBridgingHeader.h" as the bridging header for your app and any extensions (Targets -> your app -> Build Settings -> Objective C Bridging Header).
+3. Add the file "ChangeKitBridgingHeader.h" as the bridging header for your app and any extensions (Targets -> your app -> Build Settings -> Objective C Bridging Header). Note that you may need to mention its enclosing folder.
 
 4. Add the following function to your app delegate. This will allow the app to notify ChangeKit when a user logs in with Changetip.
 
 	```
-	
 	//Send a notification when the user logs in with changetip.
 	func application(application: UIApplication,
 	    openURL url: NSURL,
@@ -30,7 +29,6 @@ This library simplifies using the Changetip API for iOS. It's written in Swift 2
 	        NSNotificationCenter.defaultCenter().postNotification(notification)
 	        return true
 	}
-	    
 	```
 
 5. Add the following to your app's info.plist, replacing YOUR_APP_BUNDLE_ID with your bundle id, i.e. "com.cablej.ChangetipApp". This will allow the x-callback-url to be associated with your app.
