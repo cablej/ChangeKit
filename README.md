@@ -33,18 +33,19 @@ This library simplifies using the Changetip API for iOS. It's written in Swift 2
 	    
 	```
 
-5. Add the following to your app's info.plist, replacing YOUR_APP_BUNDLE_ID with your bundle id, i.e. "com.cablej.ChangetipApp"
+5. Add the following to your app's info.plist, replacing YOUR_APP_BUNDLE_ID with your bundle id, i.e. "com.cablej.ChangetipApp". This will allow the x-callback-url to be associated with your app.
 
-```
-<array>
-	<dict>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<string>YOUR_APP_BUNDLE_ID</string>
-		</array>
-	</dict>
-</array>
-```
+	```
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>YOUR_APP_BUNDLE_ID</string>
+			</array>
+		</dict>
+	</array>
+	```
 
 ### Authentication
 
