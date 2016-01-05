@@ -14,38 +14,36 @@ This library simplifies using the Changetip API for iOS. It's written in Swift 2
 
 3. Add the file "ChangeKitBridgingHeader.h" as the bridging header for your app and any extensions (Targets -> your app -> Build Settings -> Objective C Bridging Header).
 
-4. Add the following function to your app delegate:
+4. Add the following function to your app delegate. This will allow the app to notify ChangeKit when a user logs in with Changetip.
 
-```
+	```
+	
+	//Send a notification when the user logs in with changetip.
+	func application(application: UIApplication,
+	    openURL url: NSURL,
+	    sourceApplication: String?,
+	    annotation: AnyObject) -> Bool {
+	        let notification = NSNotification(
+	            name: "AGAppLaunchedWithURLNotification",
+	            object:nil,
+	            userInfo:[UIApplicationLaunchOptionsURLKey:url])
+	        NSNotificationCenter.defaultCenter().postNotification(notification)
+	        return true
+	}
+	    
+	```
 
-//Send a notification when the user logs in with changetip.
-func application(application: UIApplication,
-    openURL url: NSURL,
-    sourceApplication: String?,
-    annotation: AnyObject) -> Bool {
-        let notification = NSNotification(
-            name: "AGAppLaunchedWithURLNotification",
-            object:nil,
-            userInfo:[UIApplicationLaunchOptionsURLKey:url])
-        NSNotificationCenter.defaultCenter().postNotification(notification)
-        return true
-}
-    
-```
-
-This will allow the app to notify ChangeKit when a user logs in with Changetip.
-
-5. Add to your app's info.plist, replacing YOUR_APP_BUNDLE_ID with your bundle id, i.e. "com.cablej.ChangetipApp"
+5. Add the following to your app's info.plist, replacing YOUR_APP_BUNDLE_ID with your bundle id, i.e. "com.cablej.ChangetipApp"
 
 ```
 <array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>YOUR_APP_BUNDLE_ID</string>
-			</array>
-		</dict>
-	</array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>YOUR_APP_BUNDLE_ID</string>
+		</array>
+	</dict>
+</array>
 ```
 
 ### Authentication
