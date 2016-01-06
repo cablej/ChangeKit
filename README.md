@@ -90,7 +90,7 @@ All API endpoints return an optional Swift Dictionary with the Changetip respons
 
 Parameters:
 
-* full - Get full user information - Changetip.Me.full or Changetip.Me.full
+* (optional) full - Get full user information - Changetip.Me.full or Changetip.Me.notFull. Will default to not full if none is provided.
 
 ```
 ChangeKit.sharedInstance.me(ChangeKit.Me.full) { (response) -> Void in
@@ -108,7 +108,7 @@ ChangeKit.sharedInstance.me(ChangeKit.Me.full) { (response) -> Void in
 
 Parameters:
 
-* currency - USD or BTC pocket - ChangeKit.Currency.btc or ChangeKit.Currency.usd
+* (optional) currency - USD or BTC pocket - ChangeKit.Currency.btc or ChangeKit.Currency.usd. Will default to BTC if none is provided.
 
 ```
 ChangeKit.sharedInstance.balance(ChangeKit.Currency.btc) { (response) -> Void in
@@ -125,7 +125,7 @@ ChangeKit.sharedInstance.balance(ChangeKit.Currency.btc) { (response) -> Void in
 Parameters:
 
 * amount - amount to send. Changetip will parse this, so it can be in any form.
-* message - A message to include with the tip.
+* (optional) message - A message to include with the tip. Will default to no message if none is provided.
 
 ```
 ChangeKit.sharedInstance.createTipURL("$1", message: "Don't spend it all in one place!") { (response) -> Void in
@@ -134,6 +134,50 @@ ChangeKit.sharedInstance.createTipURL("$1", message: "Don't spend it all in one 
         return
     }
     print(magicURL)
+}
+```
+
+#### address (get the bitcoin deposit address of a changetip user)
+
+Parameters:
+
+* (optional)  username - The Changetip user whose address you want. Will default to the current user.
+
+```
+ChangeKit.sharedInstance.address("some_user") { (response) -> Void in
+    guard let response = response else {
+        print("Could not get information.")
+        return
+    }
+    print(response)
+}
+```
+
+#### monikers (get the list of monikers of the current user)
+
+Parameters:
+
+* (optional) page - The page of monikers to get, each page has 100 monikers. Will default to page 1.
+
+```
+ChangeKit.sharedInstance.monikers() { (response) -> Void in
+    guard let response = response else {
+        print("Could not get information.")
+        return
+    }
+    print(response)
+}
+```
+
+#### currencies (get the list of currencies and their values supported by Changetip)
+
+```
+ChangeKit.sharedInstance.currencies() { (response) -> Void in
+    guard let response = response else {
+        print("Could not get information.")
+        return
+    }
+    print(response)
 }
 ```
 
