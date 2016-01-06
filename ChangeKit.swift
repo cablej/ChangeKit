@@ -33,7 +33,6 @@ public class ChangeKit: NSObject {
     }
     
     private override init() {
-        print("booting up...")
         super.init()
     }
     
@@ -42,9 +41,6 @@ public class ChangeKit: NSObject {
             completionHandler(nil)
             return
         }
-        
-        print("access token: \(accessToken)")
-        
         
         var url = "https://www.changetip.com/\(endpoint)"
         
@@ -71,20 +67,44 @@ public class ChangeKit: NSObject {
         }
     }
     
+    //Create a one time tip url with the specified parameters.
     func tipURL(amount: String, message: String = "", completionHandler: ([String:AnyObject]?) -> Void){
         request("v2/tip-url", method: "POST", parameters: ["amount" : amount, "message": message]) { (response) -> Void in
             completionHandler(response)
         }
     }
     
+    //Get the information of the current user.
     func me(full: String = "", completionHandler: ([String:AnyObject]?) -> Void) {
         request("v2/me", method: "GET", parameters: ["full" : full]) { (response) -> Void in
             completionHandler(response)
         }
     }
     
+    //Get the balance of the current user.
     func balance(currency: String = Currency.btc, completionHandler: ([String:AnyObject]?) -> Void) {
         request("v2/pocket/\(currency)/balance", method: "GET", parameters: nil) { (response) -> Void in
+            completionHandler(response)
+        }
+    }
+    
+    //Get the bitcoin wallet address of the specified user, or the current user if none is specified.
+    func address(username: String = "", completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/wallet/address", method: "GET", parameters: ["username" : username]) { (response) -> Void in
+            completionHandler(response)
+        }
+    }
+    
+    //Get the monikers for the current user.
+    func monikers(page: Int = 1, completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/monikers", method: "GET", parameters: ["page" : String(page)]) { (response) -> Void in
+            completionHandler(response)
+        }
+    }
+    
+    //Get the currencies and their values supported by Changetip.
+    func currencies(completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/currencies", method: "GET", parameters: nil) { (response) -> Void in
             completionHandler(response)
         }
     }
