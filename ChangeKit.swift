@@ -109,6 +109,27 @@ public class ChangeKit: NSObject {
         }
     }
     
+    //Get the transactions history of a user
+    func transactions(channel: String, completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/transactions/", method: "GET", parameters: ["channel": channel]) { (response) -> Void in
+            completionHandler(response)
+        }
+    }
+    
+    //Initiate a withdrawal, amount in BTC
+    func withdraw(amount: String, address: String, completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/pocket/withdrawals/", method: "POST", parameters: ["amount": amount, "address": address]) { (response) -> Void in
+            completionHandler(response)
+        }
+    }
+    
+    //Send a tip to another user
+    func tip(receiver: String, message: String, channel: String, completionHandler: ([String:AnyObject]?) -> Void) {
+        request("v2/tip/", method: "POST", parameters: ["receiver": receiver, "message": message, "channel": channel]) { (response) -> Void in
+            completionHandler(response)
+        }
+    }
+    
     func convertStringToDictionary(text: String) -> [String:AnyObject]? {
         if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
             do {
@@ -120,7 +141,7 @@ public class ChangeKit: NSObject {
         }
         return nil
     }
-
+    
 }
 
 extension String { //helper method for oauth
