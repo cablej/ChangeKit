@@ -36,7 +36,7 @@ public class ChangeKit: NSObject {
         super.init()
     }
     
-    func request(endpoint: String, method: String, parameters: [String: String]?, completionHandler: ([String:AnyObject]?) -> Void) {
+    func request(endpoint: String, method: String, parameters: [String: String]?, hasRefreshed: Bool = false, completionHandler: ([String:AnyObject]?) -> Void) {
         guard let accessToken = keychain["accessToken"] else {
             completionHandler(nil)
             return
@@ -59,7 +59,15 @@ public class ChangeKit: NSObject {
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue()) { (response, data, error) -> Void in
             //print(error)
             guard let data = data, let dataString = String.init(data: data, encoding: NSUTF8StringEncoding), let jsonDict = self.convertStringToDictionary(dataString) else {
-                completionHandler(nil)
+                if(!hasRefreshed) {
+                    ChangeKitAuthenticate.sharedInstance.refreshToken()
+                    self.request(endpoint, method: method, parameters: parameters, hasRefreshed: true, completionHandler: { (response) -> Void in
+                        completionHandler(response)
+                    })
+                    
+                } else {
+                    completionHandler(nil)
+                }
                 return
             }
             
