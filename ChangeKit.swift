@@ -36,10 +36,14 @@ public class ChangeKit: NSObject {
         super.init()
     }
     
-    func request(endpoint: String, method: String, parameters: [String: String]?, hasRefreshed: Bool = false, completionHandler: ([String:AnyObject]?) -> Void) {
-        guard let accessToken = keychain["accessToken"] else {
-            completionHandler(nil)
-            return
+    func request(endpoint: String, method: String, parameters: [String: String]?, hasRefreshed: Bool = false, authorizationRequired: Bool = true, completionHandler: ([String:AnyObject]?) -> Void) {
+        var accessToken = ""
+        if authorizationRequired {
+            guard let token = keychain["accessToken"] else {
+                completionHandler(nil)
+                return
+            }
+            accessToken = token
         }
         
         var url = "https://www.changetip.com/\(endpoint)"
@@ -64,7 +68,7 @@ public class ChangeKit: NSObject {
                     self.request(endpoint, method: method, parameters: parameters, hasRefreshed: true, completionHandler: { (response) -> Void in
                         completionHandler(response)
                     })
-                    
+
                 } else {
                     completionHandler(nil)
                 }
@@ -117,6 +121,16 @@ public class ChangeKit: NSObject {
         }
     }
     
+    func bitcoinValueUSD(completionHandler: (Float) -> Void) {
+        request("v1/currencies/159", method: "GET", parameters: nil, authorizationRequired: false) { (response) -> Void in
+            guard let response = response, let valUSD = response["to_usd"] else {
+                return
+            }
+            
+            completionHandler(valUSD.floatValue)
+        }
+    }
+    
     //Get the transactions history of a user
     func transactions(channel: String, completionHandler: ([String:AnyObject]?) -> Void) {
         request("v2/transactions/", method: "GET", parameters: ["channel": channel]) { (response) -> Void in
@@ -149,7 +163,7 @@ public class ChangeKit: NSObject {
         }
         return nil
     }
-    
+
 }
 
 extension String { //helper method for oauth

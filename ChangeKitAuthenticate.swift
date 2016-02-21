@@ -17,7 +17,7 @@ class ChangeKitAuthenticate: NSObject {
     let manager = AFOAuth2Manager(baseURL: ChangeKit.sharedInstance.baseURL,
         clientID: ChangeKit.sharedInstance.clientID,
         secret: ChangeKit.sharedInstance.clientSecret)
-    
+
     
     override init() {
         super.init()
